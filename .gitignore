@@ -1,3 +1,4 @@
 traefik/ssl-certs/
 traefik/etc/traefik/traefik.log
+traefik/etc/traefik/access.log
 traefik/etc/traefik/users

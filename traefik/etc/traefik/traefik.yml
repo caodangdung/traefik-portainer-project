@@ -8,15 +8,19 @@ global:
 # (Optional) Log information
 # ---
 log:
-  level: ERROR  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  # level: ERROR  # DEBUG, INFO, WARNING, ERROR, CRITICAL
   format: common  # common, json, logfmt
   filePath: /etc/traefik/traefik.log
 
 # (Optional) Accesslog
 # ---
-# accesslog:
-  # format: common  # common, json, logfmt
-  # filePath: /var/log/traefik/access.log
+accesslog:
+  format: common  # common, json, logfmt
+  filePath: /etc/traefik/access.log
+  fields:
+    defaultMode: keep
+    names:
+      StartUTC: drop
 
 # (Optional) Enable API and Dashboard
 # ---
@@ -24,6 +28,19 @@ api:
   dashboard: true  # true by default
   insecure: true  # Don't do this in production!
 
+# (Optional) Enable metrics
+# ---
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+      - 10.0
 # Entry Points configuration
 # ---
 entryPoints:
