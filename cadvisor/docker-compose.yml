@@ -6,7 +6,7 @@ services:
     devices:
       - /dev/kmsg:/dev/kmsg
     environment:
-      - TZ=Asia/Ho_Chi_Minh # Change this to your timezone
+      - TZ=${TZ}
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro

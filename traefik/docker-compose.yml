@@ -14,11 +14,11 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true" # <== Enable traefik on itself to view dashboard and assign subdomain to view it
-      - "traefik.http.routers.traefik_https.rule=Host(`traefik.local`)" # <== Setting the domain for the dashboard
+      - "traefik.http.routers.traefik_https.rule=Host(`${TRAEFIK_HOST}`)" # <== Setting the domain for the dashboard
       - "traefik.http.routers.traefik_https.entrypoints=web,websecure"
       - "traefik.http.routers.traefik_https.service=traefik-service"
       - "traefik.http.services.traefik-service.loadbalancer.server.port=8080"
       - "traefik.http.routers.traefik_https.tls=true"
-      # - "traefik.http.routers.traefik_https.tls.certresolver=production"
+      - "traefik.http.routers.traefik_https.tls.certresolver=production"
       - "traefik.http.routers.traefik_https.middlewares=basic-auth-global"
       - "traefik.http.middlewares.basic-auth-global.basicauth.usersfile=/etc/traefik/users"

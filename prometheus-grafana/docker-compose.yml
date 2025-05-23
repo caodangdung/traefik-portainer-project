@@ -5,7 +5,7 @@ services:
     expose:
       - 9090
     environment:
-      - TZ=Asia/Ho_Chi_Minh # Change this to your timezone
+      - TZ=Asia/Ho_Chi_Minh
     volumes:
       - ./prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
@@ -16,15 +16,12 @@ services:
     labels:
       - "traefik.enable=true" # <== Enable traefik on itself to view dashboard and assign subdomain to view it
       - "traefik.http.routers.prometheus.entrypoints=web,websecure"
-      - "traefik.http.routers.prometheus.rule=Host(`prometheus.local`)" # <== Setting the domain for the dashboard
+      - "traefik.http.routers.prometheus.rule=Host(`${PROMETHEUS_HOST}`)" # <== Setting the domain for the dashboard
       - "traefik.http.routers.prometheus.service=prometheus-service"
       - "traefik.http.services.prometheus-service.loadbalancer.server.port=9090"
       - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.routers.prometheus.tls.certresolver=production"
     restart: unless-stopped
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   grafana:
     image: grafana/grafana
@@ -35,21 +32,18 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
-      TZ: Asia/Ho_Chi_Minh # Change this to your timezone
-      GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "false"
-      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      - TZ=${TZ}
+      - GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
     labels:
       - "traefik.enable=true" # <== Enable traefik on itself to view dashboard and assign subdomain to view it
       - "traefik.http.routers.grafana.entrypoints=web,websecure"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.local`)" # <== Setting the domain for the dashboard
+      - "traefik.http.routers.grafana.rule=Host(`${GRAFANA_HOST}`)" # <== Setting the domain for the dashboard
       - "traefik.http.routers.grafana.service=grafana-service"
       - "traefik.http.services.grafana-service.loadbalancer.server.port=3000"
       - "traefik.http.routers.grafana.tls=true"
-    restart: unless-stopped
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"  
+      - "traefik.http.routers.grafana.tls.certresolver=production"
+    restart: unless-stopped 
 
 volumes:
   prometheus_data:
@@ -57,5 +51,5 @@ volumes:
 
 networks:
   default:
-    external:
-      name: traefik_default
+    external: true
+    name: traefik_default

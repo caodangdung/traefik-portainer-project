@@ -11,11 +11,11 @@ services:
     labels:
       - "traefik.enable=true" # <== Enable traefik on itself to view dashboard and assign subdomain to view it
       - "traefik.http.routers.portainer.entrypoints=web,websecure"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.local`)" # <== Setting the domain for the dashboard
+      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST}`)" # <== Setting the domain for the dashboard
       - "traefik.http.routers.portainer.service=portainer-service"
       - "traefik.http.services.portainer-service.loadbalancer.server.port=9000"
       - "traefik.http.routers.portainer.tls=true"
-      # - "traefik.http.routers.portainer.tls.certresolver=production"
+      - "traefik.http.routers.portainer.tls.certresolver=production"
 
 volumes:
   portainer_data_ce:
